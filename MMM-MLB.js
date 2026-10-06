@@ -183,10 +183,20 @@ Module.register('MMM-MLB', {
 			card.append(row);
 		});
 
+		const statusText = this._seriesStatus(series);
+		const [standing, nextGame] = statusText.split(' · ');
+
 		const status = document.createElement('div');
 		status.className = 'mlb-series-status';
-		status.textContent = this._seriesStatus(series);
+		status.textContent = standing;
 		card.append(status);
+
+		if (nextGame) {
+			const next = document.createElement('div');
+			next.className = 'mlb-series-next';
+			next.textContent = nextGame;
+			card.append(next);
+		}
 
 		if (Array.isArray(series.games) && series.games.length) {
 			const log = document.createElement('div');
