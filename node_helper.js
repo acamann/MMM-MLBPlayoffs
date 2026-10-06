@@ -165,7 +165,16 @@ module.exports = NodeHelper.create({
 						awayScore: lastFinal.teams.away.score,
 						homeScore: lastFinal.teams.home.score
 					}
-					: null
+					: null,
+				games: series.games.map(g => ({
+					number: g.seriesGameNumber,
+					date: g.gameDate,
+					state: g.status && g.status.abstractGameState,
+					away: g.teams.away.team.abbreviation,
+					home: g.teams.home.team.abbreviation,
+					awayScore: g.teams.away.score,
+					homeScore: g.teams.home.score
+				}))
 			});
 		});
 

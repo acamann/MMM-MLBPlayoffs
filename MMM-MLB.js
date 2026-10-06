@@ -188,7 +188,34 @@ Module.register('MMM-MLB', {
 		status.textContent = this._seriesStatus(series);
 		card.append(status);
 
+		if (Array.isArray(series.games) && series.games.length) {
+			const log = document.createElement('div');
+			log.className = 'mlb-game-log';
+			series.games.forEach(g => log.append(this._buildGameLine(g)));
+			card.append(log);
+		}
+
 		return card;
+	},
+
+	_buildGameLine(g) {
+		const line = document.createElement('div');
+		line.className = 'mlb-game-line';
+
+		if (g.state === 'Final') {
+			line.textContent = `G${g.number}  ${g.away} ${g.awayScore}, ${g.home} ${g.homeScore}`;
+		} else if (g.state === 'Live') {
+			line.textContent = `G${g.number}  ${g.away} ${g.awayScore}, ${g.home} ${g.homeScore}  LIVE`;
+			line.classList.add('live');
+		} else {
+			const when = new Date(g.date);
+			const day = when.toLocaleDateString([], {month: 'numeric', day: 'numeric'});
+			const time = when.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+			line.textContent = `G${g.number}  ${day} ${time}`;
+			line.classList.add('upcoming');
+		}
+
+		return line;
 	},
 
 	_seriesStatus(series) {
