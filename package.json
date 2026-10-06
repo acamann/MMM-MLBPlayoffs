@@ -1,0 +1,15 @@
+{
+	"name": "mmm-mlb",
+	"version": "1.0.0",
+	"description": "MagicMirror² module that displays the live MLB postseason bracket with up-to-date series standings",
+	"keywords": [
+		"magicmirror",
+		"magicmirror2",
+		"module",
+		"mlb",
+		"baseball",
+		"playoffs",
+		"bracket"
+	],
+	"license": "MIT"
+}
