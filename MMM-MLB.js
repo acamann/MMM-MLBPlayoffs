@@ -131,14 +131,15 @@ Module.register('MMM-MLB', {
 		const center = document.createElement('div');
 		center.className = 'mlb-center';
 
+		const head = document.createElement('div');
+		head.className = 'mlb-col-header';
+		head.textContent = 'World Series';
+		center.append(head);
+
 		const ws = this.series.find(s => s.league === 'MLB');
 		if (ws) {
-			center.append(this._buildSeriesCard(ws, 'World Series'));
+			center.append(this._buildSeriesCard(ws));
 		} else {
-			const head = document.createElement('div');
-			head.className = 'mlb-col-header';
-			head.textContent = 'World Series';
-			center.append(head);
 			center.append(this._buildTbdCard());
 		}
 
@@ -155,14 +156,9 @@ Module.register('MMM-MLB', {
 		return card;
 	},
 
-	_buildSeriesCard(series, titleOverride) {
+	_buildSeriesCard(series) {
 		const card = document.createElement('div');
 		card.className = 'mlb-series';
-
-		const title = document.createElement('div');
-		title.className = 'mlb-series-title';
-		title.textContent = titleOverride || (series.league === 'MLB' ? series.description : `${series.league} ${series.description}`);
-		card.append(title);
 
 		series.teams.forEach((team, i) => {
 			const row = document.createElement('div');
