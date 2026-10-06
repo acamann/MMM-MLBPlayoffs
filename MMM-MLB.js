@@ -63,28 +63,14 @@ Module.register('MMM-MLB', {
 			return wrapper;
 		}
 
-		const roundTitles = ['Wild Card Series', 'Division Series', 'Championship Series', 'World Series'];
-		roundTitles.forEach((_, index) => {
-			const roundSeries = this.series.filter(s => s.roundIndex === index);
-			if (!roundSeries.length) {
-				return;
-			}
+		const bracket = document.createElement('div');
+		bracket.className = 'mlb-bracket';
 
-			const section = document.createElement('div');
-			section.className = 'mlb-round';
+		bracket.append(this._buildSide('AL'));
+		bracket.append(this._buildWorldSeries());
+		bracket.append(this._buildSide('NL'));
 
-			const header = document.createElement('div');
-			header.className = 'mlb-round-header';
-			header.textContent = roundTitles[index];
-			section.append(header);
-
-			const grid = document.createElement('div');
-			grid.className = 'mlb-series-grid';
-			roundSeries.forEach(s => grid.append(this._buildSeriesCard(s)));
-			section.append(grid);
-
-			wrapper.append(section);
-		});
+		wrapper.append(bracket);
 
 		if (this.updatedAt) {
 			const footer = document.createElement('div');
@@ -110,13 +96,72 @@ Module.register('MMM-MLB', {
 		}
 	},
 
-	_buildSeriesCard(series) {
+	_buildSide(league) {
+		const side = document.createElement('div');
+		side.className = `mlb-side mlb-${league.toLowerCase()}`;
+
+		const sideSeries = this.series.filter(s => s.league === league);
+		// WC (round 0) → Division (1) → LCS (2); columns left-to-right for AL,
+		// mirrored for NL via CSS (row-reverse).
+		const roundLabels = ['Wild Card', 'Division', 'LCS'];
+
+		roundLabels.forEach((label, roundIndex) => {
+			const col = document.createElement('div');
+			col.className = 'mlb-col';
+
+			const head = document.createElement('div');
+			head.className = 'mlb-col-header';
+			head.textContent = label;
+			col.append(head);
+
+			const inRound = sideSeries.filter(s => s.roundIndex === roundIndex);
+			if (inRound.length) {
+				inRound.forEach(s => col.append(this._buildSeriesCard(s)));
+			} else {
+				col.append(this._buildTbdCard());
+			}
+
+			side.append(col);
+		});
+
+		return side;
+	},
+
+	_buildWorldSeries() {
+		const center = document.createElement('div');
+		center.className = 'mlb-center';
+
+		const ws = this.series.find(s => s.league === 'MLB');
+		if (ws) {
+			center.append(this._buildSeriesCard(ws, 'World Series'));
+		} else {
+			const head = document.createElement('div');
+			head.className = 'mlb-col-header';
+			head.textContent = 'World Series';
+			center.append(head);
+			center.append(this._buildTbdCard());
+		}
+
+		return center;
+	},
+
+	_buildTbdCard() {
+		const card = document.createElement('div');
+		card.className = 'mlb-series mlb-tbd';
+		const status = document.createElement('div');
+		status.className = 'mlb-series-status';
+		status.textContent = 'TBD';
+		card.append(status);
+		return card;
+	},
+
+	_buildSeriesCard(series, titleOverride) {
 		const card = document.createElement('div');
 		card.className = 'mlb-series';
 
 		const title = document.createElement('div');
 		title.className = 'mlb-series-title';
-		title.textContent = series.league === 'MLB' ? series.description : `${series.league} ${series.description}`;
+		title.textContent = titleOverride || (series.league === 'MLB' ? series.description : `${series.league} ${series.description}`);
 		card.append(title);
 
 		series.teams.forEach((team, i) => {
