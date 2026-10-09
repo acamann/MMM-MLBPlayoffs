@@ -1,10 +1,10 @@
-/* MMM-MLB node helper
+/* MMM-MLBPlayoffs node helper
  *
  * Owns polling of the official MLB Stats API and all postseason
  * parsing. The front-end communicates only through socket notifications:
- *   INIT {season, updateInterval}
+ *   INIT {season, updateInterval, liveInterval}
  * and receives:
- *   MLB_DATA  {season, updatedAt, series: [...]}
+ *   MLB_DATA  {season, updatedAt, anyGameLive, series: [...]}
  *   MLB_ERROR human-readable error string
  */
 
@@ -65,7 +65,7 @@ module.exports = NodeHelper.create({
 				series
 			});
 		} catch (err) {
-			const message = `MMM-MLB: failed to load playoff schedule — ${err.message || err}`;
+			const message = `MMM-MLBPlayoffs: failed to load playoff schedule — ${err.message || err}`;
 			console.error(message);
 			this.sendSocketNotification('MLB_ERROR', message);
 		}

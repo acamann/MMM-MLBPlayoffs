@@ -1,13 +1,13 @@
-/* MMM-MLB
+/* MMM-MLBPlayoffs
  * MagicMirror² module — shows the current MLB postseason bracket
  * with up-to-date series standings (e.g. "Brewers lead 2-0").
  *
  * Data comes from the helper's fetch of the official MLB Stats API,
- * refreshed on a slow interval (default: every 3 hours).
+ * refreshed hourly, or every 15 minutes while a game is in progress.
  */
 
 // eslint-disable-next-line no-undef
-Module.register('MMM-MLB', {
+Module.register('MMM-MLBPlayoffs', {
 	defaults: {
 		view: 'bracket', // reserved for future 'standings' view
 		season: new Date().getFullYear(),
@@ -30,7 +30,7 @@ Module.register('MMM-MLB', {
 	},
 
 	getStyles() {
-		return ['MMM-MLB.css'];
+		return ['MMM-MLBPlayoffs.css'];
 	},
 
 	getDom() {

@@ -1,4 +1,4 @@
-# MMM-MLB
+# MMM-MLBPlayoffs
 
 A [MagicMirror²](https://magicmirror.builders/) module that displays the **current
 MLB postseason bracket with live series standings** — e.g. "Brewers lead 2-0",
@@ -12,7 +12,7 @@ center) with round columns sized so the rounds line up across the bracket.
 
 ```bash
 cd ~/MagicMirror/modules
-git clone https://github.com/acamann/MMM-MLBPlayoffs.git MMM-MLB
+git clone https://github.com/acamann/MMM-MLBPlayoffs.git MMM-MLBPlayoffs
 ```
 
 No dependencies to install — the module uses Node's built-in `fetch` (Node 18+).
@@ -23,7 +23,7 @@ Add to `config/config.js`:
 
 ```js
 {
-  module: 'MMM-MLB',
+  module: 'MMM-MLBPlayoffs',
   position: 'fullscreen_below',
   config: {
     season: 2026,                       // MLB season year
