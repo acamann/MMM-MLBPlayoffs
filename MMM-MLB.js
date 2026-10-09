@@ -197,7 +197,8 @@ Module.register('MMM-MLB', {
 
 		if (nextGame) {
 			const next = document.createElement('div');
-			next.className = 'mlb-series-next';
+			// Before tip-off the game line IS the status, so it takes the accent color.
+			next.className = standing ? 'mlb-series-next' : 'mlb-series-status';
 			next.textContent = nextGame;
 			card.append(next);
 		}
@@ -245,7 +246,8 @@ Module.register('MMM-MLB', {
 
 		let standing;
 		if (a.wins === 0 && b.wins === 0) {
-			standing = 'Series not started';
+			// Nothing to report yet — the upcoming game line carries the status.
+			standing = '';
 		} else if (a.wins === b.wins) {
 			standing = `Series tied ${a.wins}-${b.wins}`;
 		} else {
@@ -257,12 +259,18 @@ Module.register('MMM-MLB', {
 		}
 
 		const g = series.upcomingGame;
-		if (g.live) {
-			return `${standing} · Game ${g.number} LIVE`;
-		}
-		const when = new Date(g.date);
+		const game = g.live
+			? `Game ${g.number} LIVE`
+			: `Game ${g.number} ${this._formatGameDate(g.date)}`;
+
+		// The two parts are joined with a " · " separator that getDom() splits on.
+		return standing ? `${standing} · ${game}` : game;
+	},
+
+	_formatGameDate(iso) {
+		const when = new Date(iso);
 		const day = when.toLocaleDateString([], {weekday: 'short'});
 		const time = when.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
-		return `${standing} · Game ${g.number} ${day} ${time}`;
+		return `${day} ${time}`;
 	}
 });
