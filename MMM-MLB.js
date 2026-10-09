@@ -223,10 +223,9 @@ Module.register('MMM-MLB', {
 			line.textContent = `G${g.number}  ${g.away} ${g.awayScore}, ${g.home} ${g.homeScore}  LIVE`;
 			line.classList.add('live');
 		} else {
-			const when = new Date(g.date);
-			const day = when.toLocaleDateString([], {month: 'numeric', day: 'numeric'});
-			const time = when.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
-			line.textContent = `G${g.number}  ${day} ${time}`;
+			// e.g. "G3  10/7  7:00" — MM/DD, 12-hour, no AM/PM. Formatted by hand
+			// so the mirror's locale can't flip it to DD/MM or 24-hour.
+			line.textContent = `G${g.number}  ${this._formatGameDate(g.date, g.timeTBD)}`;
 			line.classList.add('upcoming');
 		}
 
@@ -261,16 +260,23 @@ Module.register('MMM-MLB', {
 		const g = series.upcomingGame;
 		const game = g.live
 			? `Game ${g.number} LIVE`
-			: `Game ${g.number} ${this._formatGameDate(g.date)}`;
+			: `Game ${g.number} ${this._formatGameDate(g.date, g.timeTBD)}`;
 
 		// The two parts are joined with a " · " separator that getDom() splits on.
 		return standing ? `${standing} · ${game}` : game;
 	},
 
-	_formatGameDate(iso) {
+	// MM/DD date + 12-hour time with no AM/PM suffix, built from local time so
+	// the output is identical regardless of the device's locale settings.
+	// eslint-disable-next-line class-methods-use-this
+	_formatGameDate(iso, timeTBD) {
 		const when = new Date(iso);
-		const day = when.toLocaleDateString([], {weekday: 'short'});
-		const time = when.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
-		return `${day} ${time}`;
+		const date = `${when.getMonth() + 1}/${when.getDate()}`;
+		if (timeTBD) {
+			return `${date}  TBD`;
+		}
+		const hours = when.getHours() % 12 || 12; // 12-hour, 12 instead of 0
+		const minutes = String(when.getMinutes()).padStart(2, '0');
+		return `${date}  ${hours}:${minutes}`;
 	}
 });

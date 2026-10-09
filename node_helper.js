@@ -149,6 +149,7 @@ module.exports = NodeHelper.create({
 				upcomingGame: upcoming
 					? {
 						date: upcoming.gameDate,
+						timeTBD: !!(upcoming.status && upcoming.status.startTimeTBD),
 						number: upcoming.seriesGameNumber,
 						away: upcoming.teams.away.team.abbreviation,
 						home: upcoming.teams.home.team.abbreviation,
@@ -169,6 +170,8 @@ module.exports = NodeHelper.create({
 				games: series.games.map(g => ({
 					number: g.seriesGameNumber,
 					date: g.gameDate,
+					// The API's placeholder date (07:33Z) is not a real first pitch.
+					timeTBD: !!(g.status && g.status.startTimeTBD),
 					state: g.status && g.status.abstractGameState,
 					away: g.teams.away.team.abbreviation,
 					home: g.teams.home.team.abbreviation,
