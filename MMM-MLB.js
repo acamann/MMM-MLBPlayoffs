@@ -114,13 +114,19 @@ Module.register('MMM-MLB', {
 			head.textContent = label;
 			col.append(head);
 
+			// Cards are sized as a percentage of this wrapper's height, so the
+			// round columns line up vertically across the bracket.
+			const cards = document.createElement('div');
+			cards.className = `mlb-col-cards mlb-col-cards-${roundIndex}`;
+
 			const inRound = sideSeries.filter(s => s.roundIndex === roundIndex);
 			if (inRound.length) {
-				inRound.forEach(s => col.append(this._buildSeriesCard(s)));
+				inRound.forEach(s => cards.append(this._buildSeriesCard(s)));
 			} else {
-				col.append(this._buildTbdCard());
+				cards.append(this._buildTbdCard());
 			}
 
+			col.append(cards);
 			side.append(col);
 		});
 

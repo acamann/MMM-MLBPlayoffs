@@ -193,9 +193,20 @@ module.exports = NodeHelper.create({
 
 		// Drop placeholder "Lower Seed / Higher Seed" entries until the real
 		// teams are known (later rounds get scheduled before matchups are set).
-		return seriesList.filter(s =>
+		const real = seriesList.filter(s =>
 			s.teams.every(t => !/(Lower|Higher) Seed/.test(t.fullName || t.name))
 		);
+
+		// A series is in progress once any of its games has started (live) or
+		// once some but not all of its games are final.
+		real.forEach(s => {
+			const games = s.games || [];
+			const played = games.filter(g => g.state === 'Final').length;
+			s.live = games.some(g => g.state === 'Live');
+			s.inProgress = s.live || (!s.completed && played > 0);
+		});
+
+		return real;
 	},
 
 	_seriesLeague(teamA, teamB) {

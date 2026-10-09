@@ -49,8 +49,43 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
   gap: 10px;
+}
+
+/* Card area of a round column — height percentages resolve against this. */
+.mlb-col-cards {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Wild Card: two cards pinned to the top and bottom edges */
+.mlb-col-cards-0 {
+  justify-content: space-between;
+}
+
+.mlb-col-cards-0 > .mlb-series {
+  flex: 0 0 30%;
+}
+
+/* Division: cards centered, stacked in the middle of the column */
+.mlb-col-cards-1 {
+  justify-content: center;
+  gap: 10px;
+}
+
+.mlb-col-cards-1 > .mlb-series {
+  flex: 0 0 40%;
+}
+
+/* League Championship: one large card, centered, 60% tall */
+.mlb-col-cards-2 {
+  justify-content: center;
+}
+
+.mlb-col-cards-2 > .mlb-series {
+  flex: 0 0 60%;
 }
 
 .mlb-col-header {
@@ -67,7 +102,13 @@
   flex: 0 0 260px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 10px;
+}
+
+/* World Series: single card, centered, half the bracket height */
+.mlb-center .mlb-series {
+  flex: 0 0 50%;
+  margin: auto 0;
 }
 
 .mlb-center .mlb-series {
