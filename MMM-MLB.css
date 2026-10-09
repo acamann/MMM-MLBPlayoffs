@@ -10,12 +10,12 @@
   padding: 8px 20px 16px;
   background: var(--theme-bg, #ffffff);
   color: var(--theme-text-primary, #202124);
-  font-size: 15px;
+  font-size: 30px;
   line-height: 1.25;
 }
 
 .mlb-title {
-  font-size: 26px;
+  font-size: 52px;
   font-weight: bold;
   padding-bottom: 8px;
   margin-bottom: 10px;
@@ -55,7 +55,7 @@
 
 .mlb-col-header {
   text-align: center;
-  font-size: 12px;
+  font-size: 24px;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -124,7 +124,7 @@
   justify-content: space-between;
   align-items: baseline;
   padding: 2px 0;
-  font-size: 16px;
+  font-size: 32px;
 }
 
 .mlb-team-wins {
@@ -144,13 +144,13 @@
   margin-top: 6px;
   padding-top: 6px;
   border-top: 1px solid var(--theme-border, #e0e0e0);
-  font-size: 13px;
+  font-size: 26px;
   color: var(--theme-accent, #1a73e8);
 }
 
 .mlb-series-next {
   margin-top: 4px;
-  font-size: 12px;
+  font-size: 24px;
   color: var(--theme-text-muted, #5f6368);
 }
 
@@ -158,7 +158,7 @@
   margin-top: 6px;
   padding-top: 6px;
   border-top: 1px solid var(--theme-border, #e0e0e0);
-  font-size: 12px;
+  font-size: 24px;
   color: var(--theme-text-muted, #5f6368);
 }
 
@@ -178,13 +178,13 @@
 .mlb-status {
   padding: 14px 10px;
   color: var(--theme-text-muted, #5f6368);
-  font-size: 18px;
+  font-size: 36px;
 }
 
 .mlb-error {
   padding: 8px 14px;
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 28px;
   color: #b3261e;
   background: #fce8e6;
   border-radius: 8px;
@@ -193,7 +193,7 @@
 .mlb-updated {
   margin-top: auto;
   padding-top: 10px;
-  font-size: 14px;
+  font-size: 28px;
   color: var(--theme-text-muted, #5f6368);
   text-align: right;
 }
