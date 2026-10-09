@@ -19,7 +19,7 @@
   font-weight: bold;
   padding-bottom: 8px;
   margin-bottom: 10px;
-  border-bottom: 2px solid var(--theme-border, #e0e0e0);
+  border-bottom: 4px solid var(--theme-border, #e0e0e0);
 }
 
 /* -----------------------------------------------------
@@ -71,7 +71,7 @@
 }
 
 .mlb-center .mlb-series {
-  border-width: 2px;
+  border-width: 4px;
 }
 
 /* Connector stubs leaving the inner edge of each series card */
@@ -86,7 +86,7 @@
   position: absolute;
   top: 50%;
   width: 24px;
-  border-top: 2px solid var(--theme-border, #e0e0e0);
+  border-top: 3px solid var(--theme-border, #e0e0e0);
 }
 
 .mlb-al .mlb-col:not(:last-child) .mlb-series::after {
@@ -105,7 +105,7 @@
 
 .mlb-series {
   flex: 1 1 auto;
-  border: 1px solid var(--theme-border, #e0e0e0);
+  border: 2px solid var(--theme-border, #e0e0e0);
   border-radius: 10px;
   padding: 8px 12px;
   box-sizing: border-box;
@@ -143,7 +143,7 @@
 .mlb-series-status {
   margin-top: 6px;
   padding-top: 6px;
-  border-top: 1px solid var(--theme-border, #e0e0e0);
+  border-top: 2px solid var(--theme-border, #e0e0e0);
   font-size: 26px;
   color: var(--theme-accent, #1a73e8);
 }
@@ -157,7 +157,7 @@
 .mlb-game-log {
   margin-top: 6px;
   padding-top: 6px;
-  border-top: 1px solid var(--theme-border, #e0e0e0);
+  border-top: 2px solid var(--theme-border, #e0e0e0);
   font-size: 24px;
   color: var(--theme-text-muted, #5f6368);
 }
