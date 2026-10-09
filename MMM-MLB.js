@@ -272,9 +272,15 @@ Module.register('MMM-MLB', {
 	_formatGameDate(iso, timeTBD) {
 		const when = new Date(iso);
 		const date = `${when.getMonth() + 1}/${when.getDate()}`;
-		if (timeTBD) {
+
+		// MLB parks unscheduled games at 07:33 UTC as a placeholder (2:33 AM here)
+		// and flags it with startTimeTBD. Fall back to the placeholder check so
+		// TBD still shows if the server is running an older node_helper.
+		const placeholder = when.getUTCHours() === 7 && when.getUTCMinutes() === 33;
+		if (timeTBD || placeholder) {
 			return `${date}  TBD`;
 		}
+
 		const hours = when.getHours() % 12 || 12; // 12-hour, 12 instead of 0
 		const minutes = String(when.getMinutes()).padStart(2, '0');
 		return `${date}  ${hours}:${minutes}`;
