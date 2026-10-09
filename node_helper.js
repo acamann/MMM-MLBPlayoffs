@@ -23,18 +23,27 @@ module.exports = NodeHelper.create({
 		console.log(`Starting node helper: ${this.name}`);
 		this.updateTimer = null;
 		this.config = null;
+		this.anyGameLive = false;
 	},
 
 	socketNotificationReceived(notification, payload) {
 		if (notification === 'INIT') {
 			this.config = payload || {};
-			if (this.updateTimer) {
-				clearInterval(this.updateTimer);
-			}
 			this._update();
-			const interval = Number(this.config.updateInterval) > 0 ? Number(this.config.updateInterval) : 3 * 60 * 60 * 1000;
-			this.updateTimer = setInterval(() => this._update(), interval);
 		}
+	},
+
+	// Self-rescheduling timer rather than a fixed interval: while any game is
+	// live we poll at liveInterval, otherwise we back off to updateInterval.
+	_scheduleNext() {
+		if (this.updateTimer) {
+			clearTimeout(this.updateTimer);
+		}
+		const c = this.config || {};
+		const live = Number(c.liveInterval) > 0 ? Number(c.liveInterval) : 15 * 60 * 1000;
+		const idle = Number(c.updateInterval) > 0 ? Number(c.updateInterval) : 60 * 60 * 1000;
+		const next = this.anyGameLive ? live : idle;
+		this.updateTimer = setTimeout(() => this._update(), next);
 	},
 
 	async _update() {
@@ -47,15 +56,27 @@ module.exports = NodeHelper.create({
 				throw new Error(`MLB API HTTP ${response.status}`);
 			}
 			const data = await response.json();
+			// _buildBracket sets anyGameLive for the next interval decision.
+			const series = this._buildBracket(data);
 			this.sendSocketNotification('MLB_DATA', {
 				season,
 				updatedAt: new Date().toISOString(),
-				series: this._buildBracket(data)
+				anyGameLive: this.anyGameLive,
+				series
 			});
 		} catch (err) {
 			const message = `MMM-MLB: failed to load playoff schedule — ${err.message || err}`;
 			console.error(message);
 			this.sendSocketNotification('MLB_ERROR', message);
+		}
+
+		this._scheduleNext();
+	},
+
+	stop() {
+		if (this.updateTimer) {
+			clearTimeout(this.updateTimer);
+			this.updateTimer = null;
 		}
 	},
 
@@ -198,13 +219,16 @@ module.exports = NodeHelper.create({
 		);
 
 		// A series is in progress once any of its games has started (live) or
-		// once some but not all of its games are final.
+		// once some but not all of its games are final. isGameLive is the
+		// narrower case: a game is being played right now.
 		real.forEach(s => {
 			const games = s.games || [];
 			const played = games.filter(g => g.state === 'Final').length;
-			s.live = games.some(g => g.state === 'Live');
-			s.inProgress = s.live || (!s.completed && played > 0);
+			s.isGameLive = games.some(g => g.state === 'Live');
+			s.isInProgress = s.isGameLive || (!s.completed && played > 0);
 		});
+
+		this.anyGameLive = real.some(s => s.isGameLive);
 
 		return real;
 	},

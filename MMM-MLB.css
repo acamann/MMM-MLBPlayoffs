@@ -115,14 +115,17 @@
   border-width: 4px;
 }
 
-/* Connector stubs leaving the inner edge of each series card */
-.mlb-al .mlb-col:not(:last-child) .mlb-series,
-.mlb-nl .mlb-col:not(:first-child) .mlb-series {
+/* -----------------------------------------------------
+   Connector stubs: every AL column reaches right toward the
+   center column, every NL column reaches left toward it.
+   ----------------------------------------------------- */
+.mlb-al .mlb-series,
+.mlb-nl .mlb-series {
   position: relative;
 }
 
-.mlb-al .mlb-col:not(:last-child) .mlb-series::after,
-.mlb-nl .mlb-col:not(:first-child) .mlb-series::before {
+.mlb-al .mlb-series::after,
+.mlb-nl .mlb-series::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -130,12 +133,23 @@
   border-top: 3px solid var(--theme-border, #e0e0e0);
 }
 
-.mlb-al .mlb-col:not(:last-child) .mlb-series::after {
+.mlb-al .mlb-series::after {
   right: -26px;
 }
 
-.mlb-nl .mlb-col:not(:first-child) .mlb-series::before {
+.mlb-nl .mlb-series::before {
   left: -26px;
+}
+
+/* -----------------------------------------------------
+   Series status: blue while in progress, red while live
+   ----------------------------------------------------- */
+.mlb-series.is-in-progress {
+  border-color: var(--theme-accent, #1a73e8);
+}
+
+.mlb-series.is-live {
+  border-color: #b3261e;
 }
 
 .mlb-series-grid {

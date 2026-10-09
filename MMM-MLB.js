@@ -11,7 +11,8 @@ Module.register('MMM-MLB', {
 	defaults: {
 		view: 'bracket', // reserved for future 'standings' view
 		season: new Date().getFullYear(),
-		updateInterval: 3 * 60 * 60 * 1000, // 3 hours
+		updateInterval: 60 * 60 * 1000, // 1 hour between refreshes
+		liveInterval: 15 * 60 * 1000, // 15 min while a game is in progress
 		animationSpeed: 0
 	},
 
@@ -23,7 +24,8 @@ Module.register('MMM-MLB', {
 
 		this.sendSocketNotification('INIT', {
 			season: this.config.season,
-			updateInterval: this.config.updateInterval
+			updateInterval: this.config.updateInterval,
+			liveInterval: this.config.liveInterval
 		});
 	},
 
@@ -88,6 +90,7 @@ Module.register('MMM-MLB', {
 			this.loaded = true;
 			this.series = payload.series || [];
 			this.updatedAt = payload.updatedAt;
+			this.anyGameLive = !!payload.anyGameLive;
 			this.updateDom(this.config.animationSpeed);
 		} else if (notification === 'MLB_ERROR') {
 			this.error = payload;
@@ -165,6 +168,11 @@ Module.register('MMM-MLB', {
 	_buildSeriesCard(series) {
 		const card = document.createElement('div');
 		card.className = 'mlb-series';
+		if (series.isGameLive) {
+			card.classList.add('is-live');
+		} else if (series.isInProgress) {
+			card.classList.add('is-in-progress');
+		}
 
 		series.teams.forEach((team, i) => {
 			const row = document.createElement('div');
