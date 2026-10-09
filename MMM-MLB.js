@@ -186,10 +186,14 @@ Module.register('MMM-MLB', {
 		const statusText = this._seriesStatus(series);
 		const [standing, nextGame] = statusText.split(' · ');
 
-		const status = document.createElement('div');
-		status.className = 'mlb-series-status';
-		status.textContent = standing;
-		card.append(status);
+		// A finished series says it in the winner's row (bold + blue), so the
+		// status line would just repeat it.
+		if (standing) {
+			const status = document.createElement('div');
+			status.className = 'mlb-series-status';
+			status.textContent = standing;
+			card.append(status);
+		}
 
 		if (nextGame) {
 			const next = document.createElement('div');
@@ -235,7 +239,8 @@ Module.register('MMM-MLB', {
 		}
 
 		if (series.completed) {
-			return `${a.name} win series ${a.wins}-${b.wins}`;
+			// The winner is already called out by its blue/bold row.
+			return '';
 		}
 
 		let standing;

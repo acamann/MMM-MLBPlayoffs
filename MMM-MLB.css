@@ -132,6 +132,10 @@
   font-variant-numeric: tabular-nums;
 }
 
+.mlb-team.winner {
+  color: var(--theme-accent, #1a73e8);
+}
+
 .mlb-team.winner .mlb-team-name {
   font-weight: bold;
 }
