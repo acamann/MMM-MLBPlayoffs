@@ -80,6 +80,18 @@ module.exports = NodeHelper.create({
 		}
 	},
 
+	// Rainouts land in the schedule as postponed placeholders: the MLB API can
+	// leave abstractGameState "Final" on the game while detailedState reads
+	// "Postponed" (statusCode "DR", codedGameState "D") alongside a reason like
+	// "Rain". The eventual replay then shows up as its own Final game in the
+	// same series, so the placeholder is skipped here instead of being rendered
+	// as a final game with no score behind it (which surfaced as a bogus extra
+	// "Game 4 … undefined" entry).
+	_isPostponed(g) {
+		const s = (g && g.status) || {};
+		return s.detailedState === 'Postponed' || s.statusCode === 'DR';
+	},
+
 	// Collapse the flat game list into one entry per playoff series.
 	_buildBracket(data) {
 		const games = [];
@@ -91,6 +103,11 @@ module.exports = NodeHelper.create({
 			const away = g.teams && g.teams.away;
 			const home = g.teams && g.teams.home;
 			if (!away || !home || !away.team || !home.team) {
+				return;
+			}
+			if (this._isPostponed(g)) {
+				// Rained-out game that was later replayed — the replay arrives as
+				// its own Final game in this series, so skip the placeholder.
 				return;
 			}
 
